@@ -1,27 +1,32 @@
 [tool.poetry]
 name = "finalproject-rumyancev-m25-555"
 version = "0.1.0"
-description = ""
+description = "ValutaTrade Hub — платформа для отслеживания и симуляции торговли валютами"
 authors = ["Sergey Rumyancev <133sergey@gmail.com>"]
 readme = "README.md"
+
+packages = [
+    { include = "valutatrade_hub" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
 prettytable = "^3.17.0"
 
-
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.14.10"
+
+[tool.poetry.scripts]
+project = "main:main"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.scripts]
-project = "main:main"
-
 [tool.ruff]
 line-length = 88
 target-version = "py310"
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "W"]
 ignore = []
