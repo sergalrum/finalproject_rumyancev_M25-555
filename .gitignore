@@ -16,27 +16,57 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
+
+# Virtualenv
+venv/
+env/
+.venv/
+.env/
 
 # Poetry
-myenv/
-.venv/
-.env
-
-# Logs
-logs/
-*.log
-
-# Data
-data/*.json
-!data/users.json
-!data/portfolios.json
+.venv
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*.swn
+*.sublime-workspace
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Локальные настройки
+.env
+.env.local
+.env.*.local
+
+# Данные проекта (если не должны попадать в репозиторий)
+# Убираем, если JSON-файлы — часть состояния, а не конфигурации
+# data/users.json
+# data/portfolios.json
+# data/rates.json
+
+# Логи
+*.log
+!*.log.keep
+
+# Тесты
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+.hypothesis/
