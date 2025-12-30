@@ -1,176 +1,199 @@
 # ValutaTrade Hub
 
-**Платформа для отслеживания и симуляции торговли валютами** (учебный финальный проект). Реализована как Python‑пакет с консольным интерфейсом (CLI).
+**Платформа для отслеживания и симуляции торговли валютами** с поддержкой фиатных и криптовалют.
 
-## Стек и инструменты
+## О проекте
 
-- **Python 3.12+** — язык реализации;
-- **Poetry** — управление зависимостями и сборкой;
-- **Ruff** — линтер и форматтер (соответствие PEP8);
-- **PrettyTable** — форматированный вывод таблиц в CLI;
-- **Requests** — HTTP‑клиент для работы с внешними API;
-- **python‑dotenv** — загрузка переменных окружения из `.env`;
-- **Makefile** — унифицированный интерфейс запуска (install, project, build, lint).
+ValutaTrade Hub — это CLI‑приложение для:
+- управления виртуальным портфелем валют;
+- совершения торговых операций (покупка/продажа);
+- отслеживания актуальных курсов в реальном времени;
+- работы с фиатными и криптовалютами.
 
-## Быстрый старт
+## Структура проекта
 
-> Требуется установленный Poetry. На Windows удобно через `pipx`:  
-> ```bash
-> pipx install poetry
-> ```
+```
+finalproject_rumyancev_M25-555/
+├── data/                   # Хранилище данных
+│   ├── users.json      # пользователи системы
+│   ├── portfolios.json # портфели и кошельки
+│   ├── rates.json     # локальный кэш текущих курсов
+│   └── exchange_rates.json # исторические данные
+├── logs/               # Логи приложения
+│   └── actions.log
+├── valutatrade_hub/    # Основной код проекта
+│   ├── logging_config.py # настройка логирования
+│   ├── decorators.py   # декораторы для логирования
+│   ├── core/           # Бизнес‑логика
+│   │   ├── currencies.py # иерархия валют
+│   │   ├── exceptions.py # пользовательские исключения
+│   │   ├── models.py   # модели данных (User, Wallet, Portfolio)
+│   │   ├── usecases.py # бизнес‑логика операций
+│   │   └── utils.py    # вспомогательные функции
+│   ├── infra/          # Инфраструктура
+│   │   ├── settings.py # Singleton SettingsLoader
+│   │   └── database.py # Singleton DatabaseManager
+│   ├── parser_service/  # Сервис парсинга курсов
+│   │   ├── config.py   # конфигурация API
+│   │   ├── api_clients.py # клиенты внешних API
+│   │   ├── updater.py  # логика обновления курсов
+│   │   └── storage.py  # работа с хранилищем
+│   └── cli/
+│       └── interface.py  # CLI интерфейс
+├── main.py             # Точка входа
+├── Makefile            # Автоматизация задач
+├── pyproject.toml      # Конфигурация Poetry
+└── README.md           # Документация
+```
 
-1. Установите зависимости:
-   ```bash
-   make install
-   ```
+## Установка
 
-2. Запустите CLI:
-   ```bash
-   make project
-   ```
+### Требования
+- Python 3.8+
+- Poetry (менеджер зависимостей)
 
-3. Соберите пакет:
-   ```bash
-   make build
-   ```
+### Установка зависимостей
 
-4. Проверьте код линтером:
-   ```bash
-   make lint
-   ```
+**Вариант 1: через Makefile**
+```bash
+make install
+```
 
-**Примечание для Windows**:  
-- Используйте Git Bash или совместимую реализацию `make`.  
-- Если `make` недоступен, применяйте прямые команды Poetry:  
-  ```bash
-  poetry run project
-  ```
+**Вариант 2: напрямую через Poetry**
+```bash
+poetry install
+```
+
+## Запуск приложения
+
+**Вариант 1: через Makefile**
+```bash
+make project
+```
+
+**Вариант 2: напрямую**
+```bash
+poetry run python main.py
+```
+
+## Доступные команды Makefile
+
+- `make install` — установка зависимостей через Poetry;
+- `make project` — запуск проекта в интерактивном режиме;
+- `make build` — сборка пакета для распространения;
+- `make publish` — публикация пакета в репозиторий (если настроено);
+- `make package-install` — установка собранного пакета через pip;
+- `make lint` — проверка кода линтером (ruff).
+
+## Поддерживаемые валюты
+
+### Фиатные
+- USD (базовая валюта)
+- EUR
+- GBP
+- RUB
+- JPY
+
+### Криптовалюты
+- BTC (Bitcoin)
+- ETH (Ethereum)
+- LTC (Litecoin)
+- ADA (Cardano)
+
+## Настройки времени жизни данных (TTL)
+
+- Курсы считаются «свежими» в течение **300 секунд (5 минут)**.
+- По истечении TTL система предлагает обновить данные.
+- Настройка TTL производится в `infra/settings.py`.
+
+
+## Обработка ошибок
+
+Система обрабатывает следующие типы ошибок:
+- `InsufficientFundsError` — недостаточно средств для операции;
+- `CurrencyNotFoundError` — неизвестная валюта;
+- `ApiRequestError` — ошибки при обращении к внешним API;
+- `UserNotFoundError` — пользователь не найден;
+- `InvalidPasswordError` — неверный пароль.
+
+## Логирование
+
+- Логи хранятся в файле `logs/actions.log`.
+- Формат записи: `LEVEL TIMESTAMP LOGGER_NAME MESSAGE`.
+- Регистрируются все ключевые операции: регистрация, вход, покупка, продажа.
+
 
 ## Доступные команды CLI
 
 ### Основные операции
-- `register` — регистрация пользователя;
-- `login` — вход (создаёт локальную сессию);
-- `show-portfolio` — показать портфель в базовой валюте (по умолчанию USD);
-- `buy` — купить валюту (списывает USD);
-- `sell` — продать валюту (зачисляет USD);
-- `deposit` — пополнить кошелёк (по умолчанию USD);
-- `withdraw` — снять средства (по умолчанию USD).
 
+```bash
+# Регистрация пользователя
+register --username <username> --password <password>
+
+
+# Вход в систему
+login --username <username> --password <password>
+
+# Просмотр портфеля (по умолчанию — в USD)
+show-portfolio [--base <currency>]
+
+
+# Покупка валюты
+buy --currency <code> --amount <amount>
+
+# Продажа валюты
+sell --currency <code> --amount <amount>
+
+
+# Получение курса между валютами
+get-rate --from <currency> --to <currency>
+```
 
 ### Работа с курсами
-- `get-rate` — получить курс пары (с локальным кешем);
-- `list-currencies` — список поддерживаемых валют;
-- `update-rates` — обновить курсы из внешних API (Parser Service):  
-  - `--source exchangerate|coingecko` — источник данных;  
-  - `--strict` — жёсткая замена снимка без слияний;  
-  - `--all-fiat` — все фиатные валюты (иначе только EUR/GBP/RUB);  
-  - `--no-history` — не писать в `exchange_rates.json` для этого запуска.
-- `schedule` — периодическое обновление (цикл до `Ctrl+C`):  
-  - `--interval 300` — интервал в секундах;  
-  - остальные флаги аналогичны `update-rates`.
-- `show-rates` — показать актуальные курсы из локального кеша:  
-  - `--currency BTC` — фильтрация по валюте;  
-  - `--top 2` — ограничение числа записей;  
-  - `--base USD` — пересчёт в базовую валюту.
-- `clear-history` — очистить `data/exchange_rates.json`.
 
-
-### Примеры запуска (через `make`)
 ```bash
-make project -- register --username alice --password 1234
-make project -- login --username alice --password 1234
-make project -- deposit --amount 1000
-make project -- show-portfolio
-make project -- buy --currency EUR --amount 10
-make project -- get-rate --from EUR --to USD
-make project -- list-currencies
+# Обновление всех курсов
+update-rates
+
+
+# Обновление только криптовалют (через CoinGecko)
+update-rates --source coingecko
+
+
+# Обновление только фиатных валют (через ExchangeRate API)
+update-rates --source exchangerate
+
+
+# Просмотр кэшированных курсов
+show-rates [--currency <code>] [--top <N>] [--base <currency>]
+
+
+# Список поддерживаемых валют
+list-currencies
 ```
 
-## REPL‑режим
+## Примеры использования
 
-При запуске CLI без аргументов открывается интерактивный REPL. Введите `help` для списка команд.
-
-**Примеры в REPL**:
+```bash
+poetry run project
+register --username alice --password secure123
+login --username alice --password secure123
+show-portfolio --base USD
+list-currencies
+show-rates --top 3
+show-rates --currency BTC --base EUR
+get-rate --from BTC --to USD
+buy --currency BTC --amount 0.01
+buy --currency EUR --amount 1000
+show-portfolio
+sell --currency BTC --amount 0.005
+show-portfolio --base USD
+exit
 ```
-login --username alice --password 1234
-update-rates --strict --no-history
-show-rates --base EUR --currency BTC
-schedule --interval 600 --strict
-```
 
-## Обработка ошибок и сообщения
+## Дополнительная информация
 
-Пользователь получает понятные сообщения об ошибках:
-- `InsufficientFundsError` → «Недостаточно средств: доступно X CODE, требуется Y CODE»;
-- `CurrencyNotFoundError` → «Неизвестная валюта 'XXX'» (с подсказкой проверить код);
-- `ApiRequestError` → «Ошибка при обращении к внешнему API: причина» (с рекомендацией повторить позже).
-
-
-## Логирование
-
-- Настраивается в `valutatrade_hub/logging_config.py` (вращающиеся файлы + вывод в консоль).
-- Декоратор `@log_action` применяется к операциям `BUY/SELL`, `REGISTER/LOGIN`.
-- В лог записываются:  
-  - timestamp;  
-  - действие;  
-  - `user_id`/`username` (если доступны);  
-  - валюта/сумма/курс (если применимо);  
-  - результат (`OK`/`ERROR`).
-
-
-## Кеширование курсов
-
-- Курсы сохраняются в `data/rates.json` с TTL (по умолчанию 300 сек).  
-- TTL настраивается в `pyproject.toml` (`[tool.valutatrade]`, ключ `rates_ttl_seconds`).  
-- При истечении TTL автоматически запускается обновление через Parser Service.  
-- **Автообновление при запуске**: если `last_refresh` в `data/rates.json` относится к прошлому дню, выполняется одноразовое обновление.  
-- Отключение: переменная окружения `PARSER_AUTO_UPDATE_ON_START=0`.
-
-
-## Parser Service: обновление и история
-
-### Файлы данных
-- **История измерений**: `data/exchange_rates.json`  
-  - Каждая запись содержит: `id` (формат `FROM_TO_YYYY-MM-DDTHH:MM:SSZ`), `rate`, `timestamp` (UTC, ISO), `source`, `meta`.  
-  - Дубликаты по `id` не добавляются.  
-- **Снимок (быстрый кеш)**: `data/rates.json`  
-  - Формат: `{ "pairs": { "EUR_USD": { "rate", "updated_at", "source" } }, "last_refresh": "..." }`.  
-  - Сохраняются обе стороны пары (`EUR_USD` и `USD_EUR`).
-
-### Режимы работы
-- **Обычный режим**: «слияние по свежести» (более новые значения перекрывают старые).  
-- **Строгий режим** (`--strict` или `PARSER_SNAPSHOT_STRICT=1`): полная замена снимка.  
-- **Отключение истории** (`--no-history` или `PARSER_HISTORY_DISABLED=1`).
-
-### Переменные окружения (`.env`)
-- Приоритет: реальные переменные > значения из `.env`.  
-- **Фиат (ExchangeRate‑API)**:  
-  - Вариант A: `EXCHANGERATE_API_URL=https://v6.exchangerate-api.com/v6/<KEY>/latest/USD`.  
-  - Вариант B: `EXCHANGERATE_API_KEY=<KEY>` (опционально `EXCHANGERATE_BASE=USD`).  
-- **Крипто (CoinGecko)**: ключ не требуется для `simple/price`.  
-  - Вариант A: `COINGECKO_FULL_URL=https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd`.  
-  - Вариант B: `COINGECKO_URL=https://api.coingecko.com/api/v3/simple/price` (ids из `CRYPTO_ID_MAP`).  
-- **Таймаут HTTP**: `PARSER_HTTP_TIMEOUT=10`.
-
-## Иерархия валют
-
-- Реализована в `valutatrade_hub/core/currencies.py`.  
-- Поддерживаемые коды: USD, EUR, GBP, RUB, BTC, ETH, SOL.  
-- Команда `list-currencies` выводит таблицу:
-
-  ```
-Fiat currencies:
-  [FIAT] USD — US Dollar (Issuing: United States)
-  [FIAT] EUR — Euro (Issuing: Eurozone)
-  [FIAT] RUB — Russian Ruble (Issuing: Russia)
-  [FIAT] GBP — British Pound (Issuing: United Kingdom)
-  [FIAT] JPY — Japanese Yen (Issuing: Japan)
-
-Cryptocurrencies:
-  [CRYPTO] BTC — Bitcoin (Algo: SHA-256, MCAP: 1.12e+12)
-  [CRYPTO] ETH — Ethereum (Algo: Ethash, MCAP: 4.50e+11)
-  [CRYPTO] LTC — Litecoin (Algo: Scrypt, MCAP: 5.80e+09)
-  [CRYPTO] ADA — Cardano (Algo: Ouroboros, MCAP: 1.20e+10)
-
-  ```
+- Для просмотра записи сеанса работы см. [asciinema](https://asciinema.org/a/iFwCHfSHO77X2MOMQmTfwUhIx).
+- Настройки приложения можно изменить в `infra/settings.py`.
+- Для форматирования кода используйте `make lint`.
