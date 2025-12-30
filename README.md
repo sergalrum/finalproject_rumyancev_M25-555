@@ -194,6 +194,6 @@ exit
 
 ## Дополнительная информация
 
-- Для просмотра записи сеанса работы см. [asciinema](https://asciinema.org/a/iFwCHfSHO77X2MOMQmTfwUhIx).
+- Для просмотра записи сеанса работы см. [asciinema](https://asciinema.org/a/7BV0b36f1vhJgjVzRkgHcNMoO).
 - Настройки приложения можно изменить в `infra/settings.py`.
 - Для форматирования кода используйте `make lint`.

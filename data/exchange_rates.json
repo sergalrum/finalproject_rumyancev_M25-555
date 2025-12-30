@@ -46,5 +46,101 @@
       "request_ms": 0,
       "status_code": 200
     }
+  },
+  {
+    "id": "BTC_USD_2025-12-30T15:43:23.250743",
+    "from_currency": "BTC",
+    "to_currency": "USD",
+    "rate": 87893,
+    "timestamp": "2025-12-30T15:43:23.250757",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ETH_USD_2025-12-30T15:43:23.251324",
+    "from_currency": "ETH",
+    "to_currency": "USD",
+    "rate": 2975.62,
+    "timestamp": "2025-12-30T15:43:23.251333",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "LTC_USD_2025-12-30T15:43:23.252334",
+    "from_currency": "LTC",
+    "to_currency": "USD",
+    "rate": 77.76,
+    "timestamp": "2025-12-30T15:43:23.252353",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ADA_USD_2025-12-30T15:43:23.252815",
+    "from_currency": "ADA",
+    "to_currency": "USD",
+    "rate": 0.352949,
+    "timestamp": "2025-12-30T15:43:23.252821",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "BTC_USD_2025-12-30T15:45:53.889122",
+    "from_currency": "BTC",
+    "to_currency": "USD",
+    "rate": 87888,
+    "timestamp": "2025-12-30T15:45:53.889135",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ETH_USD_2025-12-30T15:45:53.889843",
+    "from_currency": "ETH",
+    "to_currency": "USD",
+    "rate": 2975.7,
+    "timestamp": "2025-12-30T15:45:53.889852",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "LTC_USD_2025-12-30T15:45:53.890341",
+    "from_currency": "LTC",
+    "to_currency": "USD",
+    "rate": 77.74,
+    "timestamp": "2025-12-30T15:45:53.890347",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ADA_USD_2025-12-30T15:45:53.890807",
+    "from_currency": "ADA",
+    "to_currency": "USD",
+    "rate": 0.352857,
+    "timestamp": "2025-12-30T15:45:53.890814",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
   }
 ]

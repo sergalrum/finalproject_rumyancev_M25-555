@@ -11,5 +11,22 @@
         "balance": 1000.0
       }
     }
+  },
+  {
+    "user_id": 2,
+    "wallets": {}
+  },
+  {
+    "user_id": 3,
+    "wallets": {
+      "BTC": {
+        "currency_code": "BTC",
+        "balance": 0.01
+      },
+      "EUR": {
+        "currency_code": "EUR",
+        "balance": 999.0
+      }
+    }
   }
 ]
