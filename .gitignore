@@ -28,7 +28,8 @@ venv/
 env/
 .venv/
 .env/
-
+myenv/
+.myenv/
 # Poetry
 .venv
 
@@ -70,3 +71,4 @@ Thumbs.db
 .coverage.*
 .cache
 .hypothesis/
+.ruff_cache/
